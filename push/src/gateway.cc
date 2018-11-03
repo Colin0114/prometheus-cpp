@@ -8,6 +8,7 @@
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
+#include <boost/beast/core/detail/base64.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
 
@@ -87,11 +88,7 @@ int Gateway::performHttpRequest(HttpMethod method, const std::string& target,
   }
 
   if (!auth_.empty()) {
-    /* todo
-
-    curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    curl_easy_setopt(curl, CURLOPT_USERPWD, auth_.c_str());
-    */
+      req.set(boost::beast::http::field::authorization, "Basic " + boost::beast::detail::base64_encode(auth_));
   }
 
   switch (method) {
